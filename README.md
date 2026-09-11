@@ -59,6 +59,54 @@ process-local. This is a local workspace, not an authenticated multiuser service
 Do not expose it publicly or bind `--host 0.0.0.0` without adding authentication,
 per-user authorization/storage, HTTPS, and suitable production resource limits.
 
+## Vercel deployment
+
+`vercel.json` configures Vercel's FastAPI preset, the `main.py` ASGI entrypoint,
+a 300-second function duration, and a locked uv install with the chat extra.
+`.python-version` selects Python 3.14. Static files continue through FastAPI so
+the existing security headers and middleware are retained.
+
+1. Import your GitHub repository into Vercel.
+2. Set **Root Directory** to the directory containing `vercel.json` and
+   `pyproject.toml`: use `.` if this folder is the repository root, otherwise
+   `docx_knowledge_graph`.
+3. Keep **Framework Preset: FastAPI**. Do not set a frontend Output Directory or
+   a build command that starts Uvicorn; Vercel runs the exported ASGI app.
+4. Enable **Deployment Protection** for every environment you intend to use,
+   including production, before uploading private documents or configuring a
+   shared server API key. This application has no user authentication.
+5. Optionally set `OPENAI_API_KEY` in Vercel's server environment settings, or
+   enter a per-tab key using the existing chat UI after deploying.
+
+Alternatively, run these commands from the directory containing `vercel.json`:
+
+```sh
+npx vercel
+```
+
+**This configuration is for temporary previews, not reliable persistent hosting
+of the current stateful backend.** In Vercel, `main.py` writes graph JSON under
+the temporary directory instead of the read-only application directory. Uploads
+and generated graphs are capped at 3 MiB, leaving room beneath Vercel's 4.5 MB
+request/response limit; query responses remain subject to the platform limit.
+The normal local CLI keeps its existing storage location and limits.
+
+Temporary files, workspace/chat tokens, active runs, and chat history are not
+shared between instances and can disappear on cold starts. Follow-up requests
+can therefore fail with missing graphs, expired sessions, failed cancellation,
+or token errors even before a redeployment. A single function or region does
+not guarantee requests use the same instance. Download generated JSON promptly;
+do not rely on a bookmark or re-upload for durable recovery on this deployment.
+For reliable production operation, add shared graph storage and shared
+session/token/run coordination, or keep FastAPI on a persistent server.
+
+`.vercelignore` excludes local documents, graph exports, secrets, environments,
+tests, and caches. Deployment has not been performed automatically.
+
+References: [Vercel FastAPI](https://vercel.com/docs/frameworks/backend/fastapi),
+[Python runtime](https://vercel.com/docs/functions/runtimes/python), and
+[function limits](https://vercel.com/docs/functions/limitations).
+
 ## Optional Astra chat
 
 Start with the chat extra, open **Ask graph → API key**, paste your key into the

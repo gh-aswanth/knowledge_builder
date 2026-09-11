@@ -38,6 +38,12 @@ build-backend = "hatchling.build"
 [tool.hatch.build.targets.wheel]
 packages = ["src/docx_knowledge_graph"]
 
+[tool.vercel]
+entrypoint = "main:app"
+
+[tool.vercel.fastapi.static]
+cdn = false
+
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 asyncio_mode = "auto"
