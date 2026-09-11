@@ -1,0 +1,1 @@
+"""DOCX knowledge graph application."""
