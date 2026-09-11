@@ -1,0 +1,11 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "framework": "fastapi",
+  "installCommand": "uv sync --active --frozen --extra chat --no-dev --no-editable",
+  "functions": {
+    "main.py": {
+      "maxDuration": 300,
+      "excludeFiles": "{tests/**,dist/**,.data/**,.venv/**,.git/**,.pytest_cache/**,.ruff_cache/**,**/__pycache__/**}"
+    }
+  }
+}

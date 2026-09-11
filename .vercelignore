@@ -1,0 +1,14 @@
+.git/
+.vercel/
+.venv/
+.data/
+.pytest_cache/
+.ruff_cache/
+dist/
+tests/
+**/__pycache__/
+**/*.py[cod]
+.env
+.env.*
+**/*.docx
+**/*.graph.json
