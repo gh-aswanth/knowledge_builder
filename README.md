@@ -4,6 +4,16 @@ A standalone FastAPI workspace: upload a Word document, receive graph JSON,
 and explore it immediately. The original `demo/knowledge-graph` app is unchanged;
 this package does not import files from it.
 
+> **No graph database. No vector database.**
+> This system stores knowledge graphs as JSON files and searches them directly
+> in memory using Python. It does not use Neo4j or any vector database.
+
+Nodes, relationships, and source passages live in the generated graph JSON,
+saved under `.data/graphs/` by default. The built-in, read-only **GraphQuery**
+engine provides Cypher-inspired searches without a database server. Optional AI
+chat uses tools to inspect and query that same graph, rather than retrieving
+documents from a vector database.
+
 ## Start with uv
 
 Install [uv](https://docs.astral.sh/uv/getting-started/installation/) and use
@@ -33,6 +43,35 @@ The existing graph layouts, search, filters, path finder, inspector, query edito
 Markdown chat, citations that keep chat open, structured tool output, animations,
 system/light/dark themes, and chat resizing are retained. Drag the chat's left
 border to resize; its width slider remains in **Display settings**.
+
+## Screenshots
+
+### Document upload
+
+Start with a Word document or open a previously exported graph JSON file.
+
+![Graph Studio landing page with DOCX upload and graph JSON import options](docs/landing_page.png)
+
+### Graph explorer and AI chat
+
+Explore document relationships alongside filters, structured tool output,
+Markdown answers, and source citations.
+
+![Graph explorer with node filters, relationship visualization, and the AI chat panel](docs/fullscreen.png)
+
+### Citation highlighting
+
+Select a chat citation to highlight its node and connections while keeping the
+conversation open.
+
+![A cited concept and its connections highlighted in the graph beside the open chat](docs/auto_heighlight.png)
+
+### Custom graph queries
+
+Run read-only, Cypher-inspired queries against the JSON graph, inspect tabular
+results, show matches on the graph, or download the results.
+
+![GraphQuery editor showing a custom query and a table of matching concepts](docs/custom_graph_query.png)
 
 ## Server options
 
@@ -106,6 +145,24 @@ tests, and caches. Deployment has not been performed automatically.
 References: [Vercel FastAPI](https://vercel.com/docs/frameworks/backend/fastapi),
 [Python runtime](https://vercel.com/docs/functions/runtimes/python), and
 [function limits](https://vercel.com/docs/functions/limitations).
+
+## GitHub Actions: Ruff only
+
+`.github/workflows/ruff.yml` runs only `ruff check .` on pull requests targeting
+`main`, pushes to `main`, and manual runs through **Actions → Ruff → Run workflow**.
+It assumes this standalone project is the GitHub repository root.
+
+The workflow uses Python from `.python-version` and installs the locked `dev`
+dependency group through uv without installing the application or chat extras.
+It does not run formatting checks, tests, builds, or deployments, and requires no
+secrets. Actions are pinned to commit hashes.
+
+Use **Ruff check** as the required status check in branch protection, replacing
+**Lint, test, and package** if that previous check was configured.
+
+The existing Vercel configuration is retained, but GitHub Actions does not use it.
+If your repository is connected to Vercel's native Git integration, manage its
+automatic deployments separately in Vercel.
 
 ## Optional Astra chat
 
