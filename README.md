@@ -1,8 +1,7 @@
 # DOCX Knowledge Graph
 
 A standalone FastAPI workspace: upload a Word document, receive graph JSON,
-and explore it immediately. The original `demo/knowledge-graph` app is unchanged;
-this package does not import files from it.
+and explore it immediately.
 
 > **No graph database. No vector database.**
 > This system stores knowledge graphs as JSON files and searches them directly
